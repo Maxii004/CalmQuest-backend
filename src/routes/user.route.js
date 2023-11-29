@@ -1,23 +1,16 @@
 import { Router } from "express";
 //
+import verifyToken from "../middleware/token-verifier.js";
 import * as userController from "../controllers/user.controller.js";
 
 const router = Router();
 
-router.route("/signup").post((req, res) => {
-  userController.addUser(req, res);
-});
+router.use(verifyToken);
 
-router.route("/login").post((req, res) => {
-  userController.loginUser(req, res);
-});
+router.route("/:id").get(userController.getUser);
 
-router.route("/:id").get((req, res) => {
-  userController.getUser(req, res);
-});
+router.route("/:id").patch(userController.updateUser);
 
-router.route("/:id").patch((req, res) => {
-  userController.updateUser(req, res);
-});
+router.route("/").get(userController.getUsers);
 
 export default router;
