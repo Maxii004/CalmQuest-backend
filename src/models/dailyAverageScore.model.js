@@ -6,13 +6,20 @@ const dailyAverageScoreSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     dailyAverageScore: {
       type: Number,
+      required: true,
     },
     depressionSeverity: {
       type: String,
       enum: [DEPRESSION_SEVERITY],
+      required: true,
+    },
+    date: {
+      type: Date,
+      required: true,
     },
   },
   {

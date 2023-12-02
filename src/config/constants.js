@@ -10,3 +10,11 @@ export const MESSAGES_POPULATE_ATTRIBUTES = {
   AUTHOR: "name",
   RECEIVER: "name",
 };
+//
+export const DAILY_AVERAGE_SCORE_POPULATE_ATTRIBUTES = {
+  USER: "name email age",
+};
+//
+export const USER_POPULATE_ATTRIBUTES = {
+  LATEST_DAILY_AVERAGE_SCORE: "depressionSeverity dailyAverageScore date",
+};
