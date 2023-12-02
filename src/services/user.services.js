@@ -1,7 +1,9 @@
 import User from "../models/user.model.js";
+import dailyAvarageScoreServices from "./daily-avarage-score.services.js";
 import ApiError from "../utils/apiError.js";
 import httpStatus from "http-status";
 import bcrypt from "bcryptjs";
+import { USER_POPULATE_ATTRIBUTES } from "../config/constants.js";
 
 export const addUser = async (reqbody) => {
   const existingUser = await User.findOne({ email: reqbody.email });
@@ -29,8 +31,14 @@ export const addUser = async (reqbody) => {
 };
 
 export const getUser = async (id) => {
+  const options = {
+    populate: {
+      path: "latestDailyAverageScore",
+      select: USER_POPULATE_ATTRIBUTES.LATEST_DAILY_AVERAGE_SCORE,
+    },
+  };
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id, {}, options);
     if (!user) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
     return user;
   } catch (error) {
@@ -79,4 +87,49 @@ export const loginUser = async (userBody) => {
   } else {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid email or password");
   }
+};
+
+export const addQuestionnaireAttempt = async (userId, attemptBody) => {
+  const user = await getUser(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+  const attempt = await dailyAvarageScoreServices.addDailyAverageScore({
+    userId: userId,
+    depressionSeverity: attemptBody.depressionSeverity,
+    date: attemptBody.date,
+    dailyAverageScore: attemptBody.dailyAverageScore,
+  });
+  if (attempt?.id) {
+    await updateUser(userId, {
+      latestDailyAverageScore: attempt?.id,
+    });
+  }
+  return attempt;
+};
+
+export const getQuestionnaireAttempts = async (id) => {
+  try {
+    const user = await getUser(id);
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    }
+    const attempts = await dailyAvarageScoreServices.getDailyAverageScores(id);
+    return attempts;
+  } catch (error) {
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Internal Server Error"
+    );
+  }
+};
+
+export default {
+  addUser,
+  getUser,
+  getUsers,
+  updateUser,
+  loginUser,
+  addQuestionnaireAttempt,
+  getQuestionnaireAttempts,
 };

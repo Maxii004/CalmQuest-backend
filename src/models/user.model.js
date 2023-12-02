@@ -19,6 +19,13 @@ const userSchema = new Schema({
     required: { true: "Password is required" },
     min: [8, "Password must be at least 6 characters"],
   },
+  latestDailyAverageScore: {
+    type: Schema.Types.ObjectId,
+    ref: "DailyAverageScore",
+  },
+  interests: {
+    type: [String],
+  },
 });
 
 const User = model("User", userSchema);
