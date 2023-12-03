@@ -7,7 +7,7 @@ const zenBudMessages = new Schema(
       ref: "User",
       required: true,
     },
-    sender: {
+    author: {
       type: String,
       default: "ZenBud",
     },

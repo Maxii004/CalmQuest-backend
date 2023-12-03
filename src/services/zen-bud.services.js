@@ -69,9 +69,18 @@ export const getZenBudUserMessages = async (id) => {
   }
 };
 
+export const getZenBudConversation = async (id) => {
+  const userMessages = await getZenBudUserMessages(id);
+  const zenBudMessages = await getZenBudMessages(id);
+  const conversation = [...userMessages, ...zenBudMessages];
+  conversation.sort((a, b) => a.createdAt - b.createdAt);
+  return conversation;
+};
+
 export default {
   addZenBudMessage,
   addZenBudUserMessage,
   getZenBudMessages,
   getZenBudUserMessages,
+  getZenBudConversation,
 };

@@ -10,8 +10,6 @@ router.route("/").post(zenBudController.addZenBudMessage);
 //
 router.route("/:userId").post(zenBudController.addZenBudUserMessage);
 //
-router.route("/").get(zenBudController.getZenBudMessages);
-//
-router.route("/:userId").get(zenBudController.getZenBudUserMessages);
+router.route("/:userId").get(zenBudController.getZenBudConversation);
 //
 export default router;
